@@ -10,14 +10,39 @@ const networkCtx = networkCanvas.getContext("2d");
 
 const road = new Road(carCanvas.width/2, carCanvas.width * 0.90);
 
-const N = 300;
+const N = 700;
 const cars = generateCars(N);
+let bestCar = cars[0];
+if(localStorage.getItem("bestBrain")) {
+    for (let i = 0; i < cars.length; i++) {
+        cars[i].brain = JSON.parse(
+            localStorage.getItem("bestBrain"));
+        if (i != 0) {
+            NeuralNetwork.mutate(cars[i].brain, 0.2)
+        }
+    }
+}
 
 const traffic = [
-    new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2.1)
+    new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 1.5),
+    new Car(road.getLaneCenter(0), -300, 30, 50, "DUMMY", 1.8),
+    new Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 2.1),
+    new Car(road.getLaneCenter(0), -100, 30, 50, "DUMMY", 2.2),
+    new Car(road.getLaneCenter(1), -500, 30, 50, "DUMMY", 2.7),
+    new Car(road.getLaneCenter(1), -700, 30, 50, "DUMMY", 2.7),
+    new Car(road.getLaneCenter(2), -700, 30, 50, "DUMMY", 2.7)
 ];
 
 animate();
+
+function save() {
+    localStorage.setItem("bestBrain",
+    JSON.stringify(bestCar.brain));
+}
+
+function discard() {
+    localStorage.removeItem("bestBrain");
+}
 
 function generateCars(N) {
     const cars = [];
@@ -37,14 +62,14 @@ function animate(time) {
         for (let i = 0; i < traffic.length; i++) {
             traffic[i].update(road.borders, []);
         }
-        
-        let carDistances =[];
 
         for (let i = 0; i < cars.length; i++) {
             cars[i].update(road.borders, traffic);
-            carDistances.push(cars[i].y);
         }
-        let bestCar = cars.find(car => car.y == Math.min(...carDistances));
+        bestCar = cars.find(
+            c => c.y == Math.min(
+                ...cars.map(c=>c.y)
+                ));
 
         carCanvas.height = window.innerHeight;
         networkCanvas.height = window.innerHeight;
@@ -55,10 +80,12 @@ function animate(time) {
         for (let i = 0; i < traffic.length; i++) {
             traffic[i].draw(carCtx, "red");
         }
+        carCtx.globalAlpha = 0.2;
         for (i = 0; i < cars.length; i ++) {
-            if (cars[i] != bestCar) cars[i].draw(carCtx, "lightblue");
+            cars[i].draw(carCtx, "blue");
         }
-        bestCar.draw(carCtx, "blue");
+        carCtx.globalAlpha = 1;
+        bestCar.draw(carCtx, "turquoise", true);
 
         carCtx.restore();
 
