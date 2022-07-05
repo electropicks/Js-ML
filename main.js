@@ -3,6 +3,8 @@ carCanvas.width = 200;
 const networkCanvas = document.getElementById("networkCanvas");
 networkCanvas.width = 300;
 
+var paused = false;
+
 const carCtx = carCanvas.getContext("2d");
 const networkCtx = networkCanvas.getContext("2d");
 
@@ -26,28 +28,50 @@ function generateCars(N) {
 }
 
 function animate(time) {
-    for (let i = 0; i < traffic.length; i++) {
-        traffic[i].update(road.borders, []);
+    document.onkeydown = event => {
+        if (event.key == "Escape") {
+            paused = !paused;
+        } 
+    };
+    if (!paused) {
+        for (let i = 0; i < traffic.length; i++) {
+            traffic[i].update(road.borders, []);
+        }
+        
+        let carDistances =[];
+
+        for (let i = 0; i < cars.length; i++) {
+            cars[i].update(road.borders, traffic);
+            carDistances.push(cars[i].y);
+        }
+        let bestCar = cars.find(car => car.y == Math.min(...carDistances));
+
+        carCanvas.height = window.innerHeight;
+        networkCanvas.height = window.innerHeight;
+        carCtx.save();
+        carCtx.translate(0, -bestCar.y + carCanvas.height * 0.75);
+
+        road.draw(carCtx);
+        for (let i = 0; i < traffic.length; i++) {
+            traffic[i].draw(carCtx, "red");
+        }
+        for (i = 0; i < cars.length; i ++) {
+            if (cars[i] != bestCar) cars[i].draw(carCtx, "lightblue");
+        }
+        bestCar.draw(carCtx, "blue");
+
+        carCtx.restore();
+
+        networkCtx.lineDashOffset = -time/50;
+        Visualizer.drawNetwork(networkCtx, bestCar.brain);
+    } else {
+        ctx = carCtx;
+        ctx.beginPath();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "black";
+        ctx.font = (50) + "px Arial";
+        ctx.fillText("Paused",  carCanvas.width/2, 150);
     }
-    for (let i = 0; i < cars.length; i++) {
-        cars[i].update(road.borders, traffic);
-    }
-
-    carCanvas.height = window.innerHeight;
-    networkCanvas.height = window.innerHeight;
-
-    carCtx.save();
-    carCtx.translate(0, -car.y + carCanvas.height * 0.75);
-
-    road.draw(carCtx);
-    for (let i = 0; i < traffic.length; i++) {
-        traffic[i].draw(carCtx, "red");
-    }
-    car.draw(carCtx, "blue");
-
-    carCtx.restore();
-
-    networkCtx.lineDashOffset = -time/50;
-    Visualizer.drawNetwork(networkCtx, car.brain);
     requestAnimationFrame(animate);
-}   
+}
