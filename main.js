@@ -10,7 +10,7 @@ const networkCtx = networkCanvas.getContext("2d");
 
 const road = new Road(carCanvas.width/2, carCanvas.width * 0.90);
 
-const N = 100;
+const N = 300;
 const cars = generateCars(N);
 
 const traffic = [
@@ -73,5 +73,6 @@ function animate(time) {
         ctx.font = (50) + "px Arial";
         ctx.fillText("Paused",  carCanvas.width/2, 150);
     }
+    console.log(cars.filter(car => !car.damaged).length);
     requestAnimationFrame(animate);
 }
