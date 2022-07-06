@@ -25,17 +25,18 @@ if(localStorage.getItem("bestBrain")) {
 
 const traffic = [
     new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2.1),
-    new Car(road.getLaneCenter(0), -300, 30, 50, "DUMMY", 2.5),
-    new Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 2.4),
+    new Car(road.getLaneCenter(0), -300, 30, 50, "DUMMY", 1.5),
+    new Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 1.4),
     new Car(road.getLaneCenter(0), -100, 30, 50, "DUMMY", 2.2),
-    new Car(road.getLaneCenter(1), -500, 30, 50, "DUMMY", 2.7),
+    new Car(road.getLaneCenter(1), -500, 30, 50, "DUMMY", 1.7),
     new Car(road.getLaneCenter(0), -400, 30, 50, "DUMMY", 2.2),
-    new Car(road.getLaneCenter(1), -700, 30, 50, "DUMMY", 2.7),
-    new Car(road.getLaneCenter(2), -800, 30, 50, "DUMMY", 2.7),
-    new Car(road.getLaneCenter(2), -1000, 30, 50, "DUMMY", 2.7),
-    new Car(road.getLaneCenter(0), -1000, 30, 50, "DUMMY", 2.7),
-    new Car(road.getLaneCenter(1), -1200, 30, 50, "DUMMY", 2.7),
-    new Car(road.getLaneCenter(1), -1400, 30, 50, "DUMMY", 2.7)
+    new Car(road.getLaneCenter(1), -700, 30, 50, "DUMMY", 1.7),
+    new Car(road.getLaneCenter(2), -800, 30, 50, "DUMMY", 1.7),
+    new Car(road.getLaneCenter(2), -1000, 30, 50, "DUMMY", 1.7),
+    new Car(road.getLaneCenter(0), -1000, 30, 50, "DUMMY", 1.7),
+    new Car(road.getLaneCenter(1), -1200, 30, 50, "DUMMY", 1.7),
+    new Car(road.getLaneCenter(0), -1400, 30, 50, "DUMMY", 1.7),
+    new Car(road.getLaneCenter(2), -1500, 30, 50, "DUMMY", 1.7)
 ];
 
 animate();
